@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>bathcat-v3-cat-mark</title>
+<style>
+  /* CANVAS ARITHMETIC
+     photo 800x525 -> A = 1.5238
+     PH = 1400 / 1.5238 = 919
+     landscape band f = 0.38–0.52; chose 0.45
+     PANEL_H = 919 * (1 - 0.45) / 0.45 = 1123                                */
+  :root {
+    --canvas-w: 1400px;
+    --photo-h:  919px;
+    --panel-h:  1123px;
+
+    --ivory:      #F3F0E8;
+    --dominant:   #ADA69F;  /* FACT: shadowed underside of the tub rim */
+    --structural: #8FA89A;  /* FACT: sage tub exterior carrying the daisy band */
+    --neutral:    #665C50;  /* FACT: dark tabby crown, the only dark subject mass */
+    --accent:     #C9AC55;  /* FACT: yellow flowers L and R, and the daisy centres */
+
+    --title-ink:  #3E4A42;  /* FACT: shadowed sage under the tub rim */
+  }
+  html, body { margin: 0; padding: 0; background: var(--ivory); }
+  body { width: var(--canvas-w); }
+
+  .photo { display: block; }
+  .photo img { display: block; width: 100%; height: auto; }
+
+  .panel { position: relative; height: var(--panel-h); background: var(--ivory); }
+
+  .motif { position: absolute; left: 19%; top: 24%; width: 62%; height: 32%; }
+  .motif svg { display: block; width: 100%; height: 100%; overflow: visible; }
+
+  .title {
+    font-family: "Iowan Old Style", "Hoefler Text", "Palatino Linotype",
+                 Palatino, "Times New Roman", Georgia, serif;
+    color: var(--title-ink);
+    font-size: 40px;
+    letter-spacing: 0.014em;
+    line-height: 1.25;
+    font-weight: 600;
+    margin: 0;
+  }
+  .title-block { position: absolute; left: 7%; bottom: 9%; text-align: left; }
+</style>
+</head>
+<body>
+
+  <div class="photo">
+    <img src="cat-source.png" alt="">
+  </div>
+
+  <div class="panel">
+    <div class="motif">
+      <svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg" role="presentation">
+
+        <!-- PRIMARY FAMILY — tapered arcs.
+             FACT: the tub rim, one long gently-bowed horizontal sweeping the
+             full width, higher at both ends, dipping at the centre. -->
+        <path d="M 8 38 Q 100 68 192 38 Q 100 46 8 38 Z" fill="var(--dominant)" />
+
+        <!-- FACT: the sage tub exterior, a second lower arc echoing the rim. -->
+        <path d="M 22 74 Q 100 94 178 74 Q 100 78 22 74 Z" fill="var(--structural)" />
+
+        <!-- SUPPORT 1 — soft rounded masses of varying size, one family at two
+             scales.
+             FACT: yellow flowers, left cluster sparse, right cluster denser and
+             larger. Sizes and intervals vary; nothing sits on a grid. -->
+        <g fill="var(--accent)">
+          <circle cx="31" cy="26" r="4.6" />
+          <circle cx="40" cy="20" r="3.4" />
+          <circle cx="46" cy="29" r="2.6" />
+
+          <circle cx="146" cy="22" r="5.4" />
+          <circle cx="157" cy="29" r="4.2" />
+          <circle cx="165" cy="18" r="3.8" />
+          <circle cx="172" cy="26" r="4.8" />
+          <circle cx="179" cy="20" r="2.9" />
+        </g>
+
+        <!-- FACT: white daisies repeating along the sage band — the only true
+             repetition in the frame. Ivory reads as the flower punched out of
+             the band. Radii and spacing irregular. -->
+        <g fill="var(--ivory)">
+          <circle cx="52"  cy="78.6" r="1.7" />
+          <circle cx="76"  cy="80.4" r="1.3" />
+          <circle cx="100" cy="81.0" r="2.0" />
+          <circle cx="124" cy="80.4" r="1.4" />
+          <circle cx="147" cy="78.8" r="1.7" />
+        </g>
+
+        <!-- SUPPORT 2 — one simplified mass carrying the minimum identity cue.
+             FACT: the cat's head sits exactly on the rim at dead centre, ears
+             the highest point in the frame, body hidden below the waterline.
+             Two pointed ears and one continuous rounded mass — no eyes, face,
+             fur, markings or limbs. The pointed tips are the identity cue and
+             are deliberate here (the blunt-top rule governs human figures). -->
+        <path d="M 90.5 48
+                 C 90.2 41 90.8 36 92 33
+                 L 93.5 24
+                 C 94.6 28.5 95.8 31 97.2 32.2
+                 C 99 31.4 101 31.4 102.8 32.2
+                 C 104.2 31 105.4 28.5 106.5 24
+                 L 108 33
+                 C 109.2 36 109.8 41 109.5 48 Z"
+              fill="var(--neutral)" />
+
+      </svg>
+    </div>
+
+    <div class="title-block">
+      <p class="title">Ears Above the Waterline</p>
+    </div>
+  </div>
+
+</body>
+</html>

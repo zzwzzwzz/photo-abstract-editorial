@@ -1,0 +1,370 @@
+<!doctype html>
+<!--
+  ============================================================================
+  photo-abstract-editorial — composition scaffold
+  ============================================================================
+  Copy this file to a working file (e.g. harbour-v1.html), fill in every
+  <<PLACEHOLDER>>, then render:
+
+      node scripts/render.mjs harbour-v1.html harbour-v1.png
+
+  Then READ the PNG and change ONE thing per pass. Save each pass to a new
+  versioned filename — never overwrite (harbour-v2-panel-shorter.html, ...).
+
+  Everything below that is marked RULE is a hard constraint from the skill.
+  Comments marked ← FACT are where you record which observed fact in the
+  photograph a mark comes from. If you cannot write that comment for a mark,
+  the mark does not belong in the composition.
+  ============================================================================
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>photo-abstract-editorial composition</title>
+<style>
+  /* ------------------------------------------------------------------
+     1. CANVAS ARITHMETIC — adaptive, never a mechanical 50/50 split
+     ------------------------------------------------------------------
+     Work it out in this order so the photo's aspect ratio is preserved
+     exactly and the panel absorbs the proportion decision:
+
+       A  = photo natural width / photo natural height   (measure the file)
+       PH = CANVAS_W / A                                 (rendered photo height)
+       f  = target photo share of final height, from the table below
+       PANEL_H = PH * (1 - f) / f
+
+     f by source type (shift ~8% for overall harmony):
+       landscape / strong horizontal spread ....... 0.38 – 0.52
+       vertical architecture, people, tall subject  0.55 – 0.68
+       near-square / balanced visual centre ....... 0.48 – 0.58
+
+     RULE: never crop aggressively to force a ratio. Let the final canvas
+     ratio follow from the photo and the panel — do not force 1:1, 3:4,
+     or equal halves.
+  */
+  :root {
+    --canvas-w: 1400px;          /* render width; raise for a bigger export */
+    --photo-h:  <<PH>>px;        /* = canvas-w / photo aspect ratio */
+    --panel-h:  <<PANEL_H>>px;   /* = photo-h * (1 - f) / f */
+
+    /* --------------------------------------------------------------
+       2. PALETTE — sampled from the photo, desaturated, reduced.
+       RULE: one dominant, one dark structural, one light/neutral,
+       at most one or two small accents that genuinely exist in the photo.
+       No neon, no unsupported complementaries, no competing accents.
+       -------------------------------------------------------------- */
+    --ivory:      #F3F0E8;   /* flat panel ground; or a harmonious neighbour */
+    --dominant:   <<#RRGGBB>>;  /* ← FACT: */
+    --structural: <<#RRGGBB>>;  /* ← FACT: */
+    --neutral:    <<#RRGGBB>>;  /* ← FACT: */
+    --accent:     <<#RRGGBB>>;  /* ← FACT: (optional, a few marks only)     */
+
+    /* Title ink: a dark, restrained colour drawn from the photo or motif —
+       deep blue-grey, dark green, wine red, deep purple, charcoal.
+       RULE: legible on ivory, never pure #000, never the brightest accent. */
+    --title-ink: <<#RRGGBB>>;
+    --subtitle-ink: <<#RRGGBB>>;  /* lighter/less saturated, same family */
+  }
+
+  /* Body background is ivory so that any sub-pixel seam at the join reads as
+     panel, not as a white line. */
+  html, body { margin: 0; padding: 0; background: var(--ivory); }
+
+  body {
+    width: var(--canvas-w);
+    /* RULE: CLEAN mode. No gradients, texture, grain, noise, glow, vignette,
+       stains, fog or scan effects anywhere on this page. */
+  }
+
+  /* ------------------------------------------------------------------
+     3. THE PHOTOGRAPH — the literal file, unaltered
+     ------------------------------------------------------------------
+     RULE: no filter, no transform beyond proportional scaling, no overlay,
+     no blend mode, no opacity, no border-radius. The whole point of this
+     pipeline is that the photo is provably the user's original file.
+  */
+     NOTE: --photo-h is used for the ARITHMETIC above (it is what --panel-h is
+     derived from); the photo is NOT laid out at a forced height. Letting the
+     image set its own height from its true aspect ratio means a slightly wrong
+     --photo-h can never silently crop the photo or open a gap at the join.
+  */
+  .photo { display: block; }
+  .photo img {
+    display: block;        /* kills the inline baseline gap that would
+                              otherwise open a white seam at the join */
+    width: 100%;
+    height: auto;
+  }
+
+  /* ------------------------------------------------------------------
+     4. THE JOIN
+     ------------------------------------------------------------------
+     RULE: photo and panel meet directly and cleanly. No frame, border,
+     drop shadow, rounded corner, gap, margin, torn edge, tape, dimensional
+     card, collage artefact or mockup effect. Do not add anything here.
+  */
+
+  /* ------------------------------------------------------------------
+     5. THE ABSTRACT PANEL
+     ------------------------------------------------------------------
+     RULE: completely even, continuous, unbroken ivory. Nothing but the
+     motif and the title sits on it.
+  */
+  .panel {
+    position: relative;
+    height: var(--panel-h);
+    background: var(--ivory);
+  }
+
+  /* Motif box. Starting point: width 30–42% of panel width, height 28–34% of
+     panel height, keeping 65–80% clean whitespace.
+     Adapt to the subject — these are not caps:
+       · slender horizons / bridges / roads / horizontal crowds may reach
+         45–68% of panel width while staying low and thin;
+       · a vertical subject whose whole point is its stacking (a tower, a
+         two-part echo) may legitimately occupy 50–60% of panel HEIGHT — the
+         reference works do exactly this. It must still not fill the panel.
+     Do not shrink the motif into a generic small icon to satisfy a number,
+     and do not inflate it to fill space. The motif is as big as the
+     relationship it carries needs it to be.
+
+     Position it lower-middle, near centre, or at an asymmetric spot that the
+     photo's own relationships justify. */
+  .motif {
+    position: absolute;
+    left: <<38>>%;            /* asymmetry should answer the photo, not taste */
+    top:  <<34>>%;
+    width:  <<36>>%;
+    height: <<30>>%;
+  }
+  .motif svg { display: block; width: 100%; height: 100%; overflow: visible; }
+
+  /* ------------------------------------------------------------------
+     6. TITLE
+     ------------------------------------------------------------------
+     RULE: on the panel only — never in the photo area, never inside the
+     motif, never lower-right, never on the canvas edge.
+     RULE: restrained editorial serif. A composed book serif for
+     architectural / urban / structural subjects; a fine humanist serif for
+     light, nature, lyrical subjects. Never a commercial bold, sans-serif
+     advertising face, cartoon face, exaggerated handwriting, or decorative
+     font. Locally-installed faces only — the renderer has no network.
+  */
+  .title {
+    font-family: "Iowan Old Style", "Hoefler Text", "Palatino Linotype",
+                 Palatino, "Times New Roman", Georgia, serif;
+    color: var(--title-ink);
+    font-size: <<34>>px;
+    letter-spacing: 0.012em;
+    line-height: 1.25;
+    /* The reference works set the title with real weight — it reads as a
+       quiet editorial statement, not a caption. 600 on a book serif is the
+       right register; 400 disappears against the panel, 800 shouts. */
+    font-weight: 600;
+    margin: 0;
+  }
+  .subtitle {                 /* omit entirely unless it adds a NEW layer */
+    font-family: inherit;
+    font-style: italic;
+    color: var(--subtitle-ink);
+    font-size: <<19>>px;
+    letter-spacing: 0.01em;
+    margin: 0.55em 0 0;
+  }
+
+  /* LAYOUT A — lower-left aligned. Use when the motif sits toward the right,
+     spreads horizontally, or the overall weight leans right.
+     6–9% safe distance from the left and lower edges. */
+  .title-block {
+    position: absolute;
+    left: 7%;
+    bottom: 8%;
+    text-align: left;
+  }
+
+  /* LAYOUT B — bottom centred. Use when the motif is essentially centred,
+     the axis is clear, the architecture is symmetrical, or the image has a
+     vertical echo. Align to the motif's central axis, but keep clear air
+     between title and motif. Swap this in for .title-block above:
+
+  .title-block {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 9%;
+    text-align: center;
+  }
+  */
+</style>
+</head>
+<body>
+
+  <!-- ==================================================================
+       PHOTOGRAPH — point src at the user's actual file.
+       Absolute file:// path, or a data: URI if the renderer needs it
+       (see references/render-notes.md).
+       alt is for the source file only; it never appears in the PNG.
+       ================================================================== -->
+  <div class="photo">
+    <img src="file:///<<ABSOLUTE/PATH/TO/PHOTO.jpg>>" alt="">
+  </div>
+
+  <!-- ==================================================================
+       ABSTRACT MEMORY PANEL
+       ==================================================================
+       The marks below are a SCAFFOLD showing the shapes of the vocabulary,
+       not a design to reuse. Delete every group you do not need and rebuild
+       the rest from this photo's facts.
+
+       RULE: one primary mark family + at most two supporting families.
+         primary   : flat/slightly organic colour blocks · soft circles or
+                     irregular masses · arcing or tapered strokes ·
+                     continuous short bars or stacked bands ·
+                     simplified architectural masses
+         supporting: fine lines or structural axes · short vertical bars,
+                     isolated dots or tiny contours · restrained human ink
+                     marks · a small amount of repeated rhythm
+
+       RULE: every mark carries an ← FACT comment. No decoration, no invented
+       symmetry, no regularized spacing. Vary neighbouring marks slightly in
+       scale and position so the rhythm reads as observed, not generated.
+
+       The viewBox is a unitless working grid; the .motif box does the sizing.
+
+       ------------------------------------------------------------------
+       MARK VOCABULARY — the difference between artwork and a diagram
+       ------------------------------------------------------------------
+       THE SINGLE MOST IMPORTANT THING IN THIS FILE. Marks in this style are
+       TAPERED and ORGANIC: thick through the middle, coming to a point at
+       the ends, with a slight asymmetry. A uniform-width <line> or <rect>
+       reads instantly as a chart. Filled <path> lenses read as drawn.
+
+       Default to <path> lens shapes. Reach for <line> only for a genuine
+       hairline structural axis (a wire, a horizon, a rail).
+
+       (a) TAPERED HORIZONTAL BAND — a stratum of light, a horizon, a shore.
+           Two mirrored quadratics; the gap between control points IS the
+           thickness. Move the control x off centre so it tapers unevenly.
+             <path d="M 12 60 Q 96 55.4 188 60 Q 96 64.6 12 60 Z" />
+           Thinner: bring the control ys closer to 60. Nested bands of
+           slightly different length and thickness give the stacked-strata
+           look — never the same length twice.
+
+       (b) TAPERED ARC — an eave, a curved rail, a bowed cable, a wave.
+           Same lens, but both control points swing well off the chord so the
+           whole form bends:
+             <path d="M 28 44 Q 100 12 172 44 Q 100 26 28 44 Z" />
+           Widen the gap between the two control ys for a heavier arc.
+
+       WEIGHT — the most common miss after shape. Marks want to be HEAVIER
+       than instinct suggests. A lens whose control ys sit ~4 units apart on
+       a 200-unit viewBox renders as a delicate hairline that dissolves at
+       full size; ~10–14 units apart reads as a confident drawn mark. If the
+       panel looks timid or the motif seems to float, the fault is usually
+       weight, not size or position — thicken before you enlarge or move.
+
+       (c) IRREGULAR VERTICAL MARK — one person, one post, one trunk.
+           ONE continuous tapered sliver: head, shoulders and body joined,
+           slightly wider at the base, never a capsule, never a circle head.
+           CRITICAL: cap the top BLUNTLY (the short middle curve below). A
+           path that tapers to a needle point reads as a spike or a cypress
+           tree, not a person — verified by eye, this is the one detail that
+           decides whether a crowd looks human:
+             <path d="M 111.4 80 C 111.2 73.5 111.5 68.5 112.1 66.6
+                      C 112.5 65.8 113.3 65.8 113.6 66.6
+                      C 114.2 68.5 114.4 73.5 114.1 80 Z" />
+           Keep them stubbier than instinct suggests — roughly 1:6
+           width-to-height, not 1:9; needles stop reading as bodies.
+           For a crowd, vary height, width, tilt, interval and overlap on
+           every single mark. Evenly spaced identical slivers read as a
+           barcode and violate the no-regularized-spacing rule.
+
+       (d) HAIRLINE STRUCTURAL AXIS — wires, rails, distant horizons.
+           A real <line> is right here, but keep it under ~1px at render
+           scale and BREAK it irregularly rather than crossing the full
+           width. Two unequal segments with an uneven gap beat one line.
+
+       (e) SCATTER — distant lights, windows, birds, punctuation.
+           Small circles of DIFFERENT radii at irregular intervals, thinning
+           out toward the edges. Identical evenly-spaced dots look generated.
+
+       (f) SIMPLIFIED MASS — a hill, a hull, a roof, a rock.
+           A closed <path> with gently curved sides, asymmetric. Resist the
+           polygon; a triangle or trapezoid of straight lines reads as an
+           icon.
+
+       Colour goes on `fill`, not `stroke`, for every lens form above.
+  -->
+  <div class="panel">
+    <div class="motif">
+      <svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg" role="presentation">
+
+        <!-- PRIMARY FAMILY — recipe (a), stacked tapered bands.
+             ← FACT: <<which stratum / horizon / mass relationship this is>>
+             Note every band differs in length, thickness and centre. Three
+             identical bands would read as a chart; these read as observed.
+             Keep only 1–3 identity cues for a landmark; no windows, masonry,
+             brackets, carvings, rail patterns or surface detail. -->
+        <g fill="var(--dominant)">
+          <path d="M 22 58 Q 104 53.6 178 58  Q 104 62.1 22 58  Z" />
+          <path d="M 34 64 Q 112 60.8 186 64  Q 112 67.4 34 64  Z" />
+          <path d="M 18 70 Q  92 67.5 160 70  Q  92 72.3 18 70  Z" />
+        </g>
+
+        <!-- SUPPORTING FAMILY 1 — recipe (d), hairline structural axis.
+             Railings, roads, horizons and shores compress into one or two
+             fine axes, BROKEN irregularly rather than spanning edge to edge.
+             ← FACT: -->
+        <g stroke="var(--structural)" stroke-width="0.55">
+          <line x1="8" y1="80" x2="74" y2="80" />
+          <line x1="88" y1="80" x2="192" y2="80" />
+        </g>
+
+        <!-- SUPPORTING FAMILY 2 — recipe (c), people.
+             RULE: each person is ONE continuous, irregular tapered vertical
+             mark — head, shoulders and body joined. Never separate heads,
+             limbs, faces or clothing. Never neat capsules. Height, width,
+             interval, tilt and overlap all vary; nothing here is on a grid.
+             ← FACT: -->
+        <g fill="var(--structural)">
+          <path d="M 111.4 80 C 111.2 73.5 111.5 68.5 112.1 66.6 C 112.5 65.8 113.3 65.8 113.6 66.6 C 114.2 68.5 114.4 73.5 114.1 80 Z" />
+          <path d="M 117.6 80 C 117.4 71.0 117.7 64.0 118.4 61.4 C 118.8 60.5 119.7 60.5 120.1 61.4 C 120.8 64.0 121.0 71.0 120.7 80 Z" />
+          <path d="M 126.6 80 C 126.5 75.0 126.7 71.0 127.2 69.4 C 127.5 68.7 128.1 68.7 128.4 69.4 C 128.9 71.0 129.1 75.0 129.0 80 Z" />
+          <path d="M 132.4 80 C 132.2 72.0 132.6 66.0 133.3 63.4 C 133.7 62.5 134.5 62.6 134.8 63.5 C 135.4 66.0 135.6 72.0 135.3 80 Z" />
+        </g>
+
+        <!-- ACCENT — recipe (e). A few marks only, in a colour that truly
+             exists in the photo. Radii and spacing vary; they thin out.
+             Delete the whole group if the photo has not earned an accent.
+             ← FACT: -->
+        <g fill="var(--accent)">
+          <circle cx="150" cy="83" r="1.6" />
+          <circle cx="158" cy="83" r="1.1" />
+          <circle cx="169" cy="83" r="1.9" />
+          <circle cx="177" cy="83" r="0.8" />
+        </g>
+
+      </svg>
+    </div>
+
+    <!-- ==============================================================
+         TITLE — two to five original English words, grounded in a visible
+         fact. Faithful · clear · elegant. No travel-brochure phrasing, no
+         place description, no photographic jargon, no empty words
+         ("Memory", "Dream", "Moment"), no grand narrative.
+         Rendered exactly once. No title options anywhere in the file.
+         ============================================================== -->
+    <div class="title-block">
+      <p class="title"><<Two To Five Words>></p>
+      <!-- Subtitle: 3–7 words, and ONLY if it adds a new layer of meaning
+           rather than restating the title. Otherwise delete this line. -->
+      <!-- <p class="subtitle"><<optional subtitle>></p> -->
+    </div>
+  </div>
+
+  <!-- RULE: nothing else on the canvas. No commentary, analysis, labels,
+       dates, serial numbers, place descriptions, colour swatches, legends,
+       signatures, logos or watermarks. -->
+
+</body>
+</html>

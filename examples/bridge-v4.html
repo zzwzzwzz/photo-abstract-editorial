@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>bridge-v3-opened</title>
+<style>
+  /* CANVAS ARITHMETIC
+     photo 275x183 -> A = 1.5027
+     Canvas held to 1100 (not 1400): the source is only 275px wide, so a
+     larger canvas would upscale it past 4x and visibly mush the photograph.
+     PH = 1100 / 1.5027 = 732
+     landscape band f = 0.38–0.52; chose 0.45
+     PANEL_H = 732 * (1 - 0.45) / 0.45 = 895                                 */
+  :root {
+    --canvas-w: 1100px;
+    --photo-h:  732px;
+    --panel-h:  895px;
+
+    --ivory:      #F3F0E8;
+    --dominant:   #C7A49C;  /* FACT: warm pink sky, seen through the arch */
+    --reflected:  #B08D87;  /* FACT: the same sky in the water — reflections
+                                     always read a shade darker than the source */
+    --structural: #44505E;  /* FACT: dark slate roof, stone arch, trees, banks */
+    --neutral:    #B0A6BA;  /* FACT: mauve-violet cloud strata in the upper sky */
+    --accent:     #A87D6C;  /* FACT: warm lantern lights on both banks + their
+                                     reflections along the water */
+
+    --title-ink:  #3A4550;  /* FACT: the darkest slate of the bridge roof */
+  }
+  html, body { margin: 0; padding: 0; background: var(--ivory); }
+  body { width: var(--canvas-w); }
+
+  .photo { display: block; }
+  .photo img { display: block; width: 100%; height: auto; }
+
+  .panel { position: relative; height: var(--panel-h); background: var(--ivory); }
+
+  .motif { position: absolute; left: 21%; top: 20%; width: 58%; height: 43%; }
+  .motif svg { display: block; width: 100%; height: 100%; overflow: visible; }
+
+  .title {
+    /* composed book serif — architectural / structural subject */
+    font-family: "Iowan Old Style", "Hoefler Text", "Palatino Linotype",
+                 Palatino, "Times New Roman", Georgia, serif;
+    color: var(--title-ink);
+    font-size: 34px;
+    letter-spacing: 0.014em;
+    line-height: 1.25;
+    font-weight: 600;
+    margin: 0;
+  }
+  /* LAYOUT B — bottom centred: the motif is essentially centred, the axis is
+     clear, and the image has a strong vertical echo about the waterline. */
+  .title-block {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    bottom: 9%; text-align: center;
+  }
+</style>
+</head>
+<body>
+
+  <div class="photo">
+    <img src="bridge-source.png" alt="">
+  </div>
+
+  <div class="panel">
+    <div class="motif">
+      <svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg" role="presentation">
+
+        <!-- PRIMARY FAMILY — tapered bands.
+             FACT: horizontal cloud strata banding the upper sky. Each differs in
+             length, thickness and centre; the lowest carries the warm colour. -->
+        <path d="M 30  7 Q 100  2 168  7 Q 100 12   30  7 Z" fill="var(--neutral)" />
+        <path d="M 18 16 Q 100 10 152 16 Q 100 20.5 18 16 Z" fill="var(--neutral)" />
+        <path d="M 44 24 Q 100 19 180 24 Q 100 28   44 24 Z" fill="var(--dominant)" />
+
+        <!-- FACT: the covered bridge roofline — one long horizontal whose ends
+             flick upward into eaves, dipping through the centre. Held well clear
+             of the arch below it: in the photograph there is open air between
+             the roof and the water. -->
+        <path d="M 24 36 Q 100 48 176 36 Q 100 38 24 36 Z" fill="var(--structural)" />
+
+        <!-- FACT: the raised central pavilion, the highest built point. -->
+        <path d="M 93 37 C 94.5 32 96.8 28.5 100 26
+                 C 103.2 28.5 105.5 32 107 37 Z" fill="var(--structural)" />
+
+        <!-- SUPPORT 1 — soft rounded masses.
+             FACT: the arch and its reflection close into one complete circle of
+             sky held in stone — what the photograph is about. Split at the
+             waterline: the upper half is the opening, the lower half is its
+             reflection, a shade darker. -->
+        <path d="M 80 82 A 20 20 0 0 1 120 82 Z" fill="var(--dominant)" />
+        <path d="M 80 82 A 20 20 0 0 0 120 82 Z" fill="var(--reflected)" />
+
+        <!-- FACT: two smaller side arches repeat the circle at unequal sizes. -->
+        <path d="M 48 82 A 8.5 8.5 0 0 1 65 82 Z" fill="var(--dominant)" />
+        <path d="M 48 82 A 8.5 8.5 0 0 0 65 82 Z" fill="var(--reflected)" />
+        <path d="M 137 82 A 7.2 7.2 0 0 1 151.4 82 Z" fill="var(--dominant)" />
+        <path d="M 137 82 A 7.2 7.2 0 0 0 151.4 82 Z" fill="var(--reflected)" />
+
+        <!-- FACT: the stone arch capping the main opening, overhanging it. -->
+        <path d="M 75 82 A 25 25 0 0 1 125 82 L 120 82 A 20 20 0 0 0 80 82 Z"
+              fill="var(--structural)" />
+
+        <!-- FACT: dark massed banks — low stone walls, buildings and trees
+             closing both edges. Unequal length and height. -->
+        <path d="M 2 82 L 2 75.5 C 13 74 27 75 40 77.3 C 44 78.1 46 80 46 82 Z"
+              fill="var(--structural)" />
+        <path d="M 198 82 L 198 74 C 187 72.6 172 73.8 158 76.4 C 154.5 77.2 153 79.4 153 82 Z"
+              fill="var(--structural)" />
+
+        <!-- SUPPORT 2 — one fine structural axis.
+             FACT: the waterline, the mirror every form above is repeated across.
+             Broken irregularly rather than spanning edge to edge. -->
+        <g stroke="var(--structural)" stroke-width="0.6">
+          <line x1="4"  y1="82" x2="88"  y2="82" />
+          <line x1="96" y1="82" x2="196" y2="82" />
+        </g>
+
+        <!-- FACT: warm lantern lights along both banks and their reflections.
+             A few marks only; radii and spacing irregular. -->
+        <g fill="var(--accent)">
+          <circle cx="40"  cy="84.6" r="2.1" />
+          <circle cx="47"  cy="85.8" r="1.4" />
+          <circle cx="68"  cy="84.9" r="1.7" />
+          <circle cx="132" cy="84.4" r="1.8" />
+          <circle cx="154" cy="85.9" r="1.3" />
+          <circle cx="162" cy="84.7" r="2.1" />
+        </g>
+
+      </svg>
+    </div>
+
+    <div class="title-block">
+      <p class="title">Half Arch, Whole Circle</p>
+    </div>
+  </div>
+
+</body>
+</html>
